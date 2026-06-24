@@ -11,8 +11,6 @@ repo=input("Enter repo name: ")
 url=f"https://api.github.com/repos/{repo}"
 response = requests.get(url)
 token = response.json()
-print(type(token))
-print(token)
 
 print("Repository Name: ", token['name'])
 print("Repository Owner: ", token['owner']['login'])

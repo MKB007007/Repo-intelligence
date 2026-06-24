@@ -1,0 +1,11 @@
+Day 1
+- Learned GitHub REST API
+- Parsed JSON responses
+- Fetched repository metadata
+- Fetched contributor data
+- Discovered pagination (30 contributor limit)
+- Implemented page traversal
+- Calculated top contributor share
+- Calculated top 5 contributor share
+- Hit GitHub rate limit
+- Identified 2N request inefficiency

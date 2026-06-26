@@ -1,42 +1,90 @@
 # GitHub Intelligence Analyzer
 
-A Python-based command-line tool that analyzes GitHub repositories and extracts meaningful contributor insights using the GitHub REST API.
+A Python-based command-line tool that analyzes GitHub repositories using the GitHub REST API and provides engineering insights about contributor distribution and development activity.
 
 ## Features
 
-* Fetch repository metadata
-* Fetch contributor data
-* Handle GitHub API pagination
-* Calculate total contributions
-* Calculate contributor contribution percentages
-* Calculate Top Contributor Share
-* Calculate Top 5 Contributor Share
+### Repository Information
 
-## Example Output
+* Repository metadata
+* Owner
+* Primary language
+* Creation date
+* Last updated date
 
-```text
-Repository Name: vscode
-Repository Owner: microsoft
+### Contributor Analysis
 
-Total Contributions: 110284
+* Total repository contributions
+* Individual contributor statistics
+* Contribution percentage for each contributor
+* Top contributor share
+* Top 5 contributors share
 
-Top Contributor Share: 11.59%
-Top 5 Contributor Share: 46.34%
-```
+### Contributor Concentration Analysis
 
-## Installation
+* Estimates contributor concentration using contribution distribution
+* Calculates the number of contributors required to reach 80% of total contributions
+* Classifies contributor distribution into meaningful engineering categories
+* Generates human-readable insights
+
+### Activity Analysis
+
+* Latest commit information
+* Latest commit author
+* Commits in the last 30 days
+* Commits in the previous 90 days
+* Commit rate (commits/day)
+* Activity trend detection
+* Automatically identifies:
+
+  * Accelerating development
+  * Stable development
+  * Declining activity
+  * Revived projects
+  * Dormant repositories
+
+### Authentication
+
+* GitHub Personal Access Token (PAT) authentication
+* Secure credential management using `.env`
+* Increased GitHub API rate limit
+
+### Error Handling
+
+* Invalid repository detection
+* Invalid GitHub token detection
+* GitHub API rate-limit detection
+
+## Technologies Used
+
+* Python
+* GitHub REST API
+* Requests
+* python-dotenv
+
+## Setup
+
+1. Clone the repository.
+
+2. Install dependencies.
 
 ```bash
-pip install requests
+pip install requests python-dotenv
 ```
 
-## Usage
+3. Create a `.env` file.
+
+```text
+GITHUB_TOKEN=your_personal_access_token
+```
+
+4. Run the program.
 
 ```bash
 python main.py
 ```
 
-Then enter:
+5. Enter the repository in the following format.
 
 ```text
 owner/repository
@@ -48,25 +96,11 @@ Example:
 microsoft/vscode
 ```
 
-## Technologies Used
+## Future Improvements
 
-* Python
-* Requests
-* GitHub REST API
-
-## Roadmap
-
-* [x] Repository metadata analysis
-* [x] Contributor analysis
-* [x] Pagination support
-* [x] Top contributor share
-* [x] Top 5 contributor share
-* [ ] Bus factor estimation
-* [ ] Contributor concentration analysis
-* [ ] Activity trend analysis
-* [ ] Issue health analysis
-* [ ] Insight generation
-
-## Motivation
-
-GitHub provides large amounts of repository data, but many useful insights remain hidden. This project aims to transform raw repository information into actionable engineering metrics that help understand contributor concentration, project risk, and repository health.
+* Issue Health Analysis
+* Overall Repository Health Score
+* Better performance using GitHub API filtering (`since` parameter)
+* Modular project structure
+* Data visualization
+* Export reports to CSV/PDF

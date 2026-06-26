@@ -5,7 +5,6 @@ import os
 
 load_dotenv()
 git_token=os.getenv("GITHUB_TOKEN")
-print(git_token)
 
 try:
     soc_l=[]# sum of contributions
@@ -20,15 +19,21 @@ try:
     no_of_commits_30=0
     no_of_commits_90=0
     activity_ratio=0
-
     headers = {
     "Authorization": f"Bearer {git_token}"
-   }
+    }
     repo=input("Enter repo name: ")
     url=f"https://api.github.com/repos/{repo}"
     response = requests.get(url,headers=headers)
     token = response.json()
 
+    if response.status_code==404:
+        raise ValueError("Repository not found")
+    elif response.status_code==401:
+        raise ValueError("Invalid GitHub Token")
+    elif response.status_code==403:
+        raise ValueError("Github api rate limit exceeded")
+    
     print('='*60)
     print("GITHUB INTELLIGENCE ANALYSER".center(60))
     print('='*60,'\n')
@@ -66,36 +71,42 @@ try:
 
     print()
     print(f"Top contributor Share: {share_l[0]:0.2f}%")
-    print(f"Top 5 contributors Share: {sum(share_l[0:5]):0.2f}%\n")
+    top5_share=sum(share_l[0:5])
+    print(f"Top 5 contributors Share: {top5_share:0.2f}%\n")
 
     i=0
     while ss<80:
         ss+=float(share_l[i])
         bf+=1
         i+=1
-    if bf == 1:
-        risk = "Critical"
-        message = "This project depends heavily on a single contributor. Losing that contributor could seriously impact development."
-    elif bf <= 3:
-        risk = "High"
-        message = "A small number of contributors are responsible for most of the work. The project has a high dependency on key individuals."
-    elif bf <= 7:
-        risk = "Moderate"
-        message = "Development is concentrated among a few contributors, but knowledge is reasonably distributed."
-    elif bf <= 15:
-        risk = "Healthy"
-        message = "Work is spread across several contributors, reducing dependency on any single person."
-    elif bf <= 30:
-        risk = "Very Healthy"
-        message = "The project benefits from strong contributor diversity and low concentration risk."
+    if top5_share >= 90:
+        level = "Critical Concentration"
+        insight = "Over 90% of all contributions come from the top five contributors. The project is highly dependent on a small core team."
+
+    elif top5_share >= 75:
+        level = "High Concentration"
+        insight = "Most development is driven by the top five contributors. The project has moderate dependency on key individuals."
+
+    elif top5_share >= 60:
+        level = "Moderate Concentration"
+        insight = "Contributions are reasonably distributed, although the core contributors still perform a significant share of the work."
+
+    elif top5_share >= 40:
+        level = "Healthy Distribution"
+        insight = "Work is well distributed across the contributor base, reducing dependency on a few individuals."
+
     else:
-        risk = "Highly Distributed"
-        message = "Contributions are widely distributed across the community, indicating excellent resilience and collaboration."
-    print("\nBus Factor Analysis")
+        level = "Highly Distributed"
+        insight = "Contributions are broadly shared across the community, indicating excellent contributor diversity."
+
+    print("\nContributor Concentration Analysis")
     print("-" * 60)
-    print(f"Bus Factor: {bf}")
-    print(f"Risk Level: {risk}")
-    print(f"Insight: {message}")
+    print(f"Top Contributor Share : {share_l[0]:.2f}%")
+    print(f"Top 5 Contributors    : {top5_share:.2f}%")
+    print(f"Number of Contributors for 80% Share : {bf}")
+    print()
+    print(f"Distribution Level : {level}")
+    print(f"Insight           : {insight}")
 
     commit_url=f"{url}/commits"
     commit_request=requests.get(commit_url, headers=headers).json()
@@ -160,8 +171,5 @@ try:
     print(f"Activity Trend       : {trend}")
     print(f"Insight              : {insight}")
 
-
-
-except Exception as e:
-    print(type(e))
+except ValueError as e:
     print(e)
